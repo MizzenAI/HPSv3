@@ -193,7 +193,7 @@ def train(config, local_rank=0, debug=False):
         set_requires_grad(
             model_to_configure.model.parameters(), not model_config.freeze_llm
         )
-        set_requires_grad(model_to_configure.model.embed_tokens.parameters(), False)
+        set_requires_grad(model_to_configure.model.language_model.embed_tokens.parameters(), False)
     if not peft_lora_config.vision_lora:
         # set requires_grad for visual encoder and merger
         set_requires_grad(

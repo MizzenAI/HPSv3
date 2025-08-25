@@ -146,7 +146,7 @@ class Qwen2VLRewardModelBT(Qwen2VLForConditionalGeneration):
         )
         # pdb.set_trace()
         if inputs_embeds is None:
-            inputs_embeds = self.model.embed_tokens(input_ids)
+            inputs_embeds = self.model.language_model.embed_tokens(input_ids)
             if pixel_values is not None:
                 pixel_values = pixel_values.type(self.visual.get_dtype())
                 image_embeds = self.visual(pixel_values, grid_thw=image_grid_thw)

@@ -49,13 +49,17 @@ from transformers.image_transforms import (
     resize,
     to_channel_dimension_format,
 )
+try:
+    from transformers.image_utils import VideoInput
+except:
+    from transformers.video_utils import VideoInput
+    
 from transformers.image_utils import (
     OPENAI_CLIP_MEAN,
     OPENAI_CLIP_STD,
     ChannelDimension,
     ImageInput,
     PILImageResampling,
-    VideoInput,
     get_image_size,
     infer_channel_dimension_format,
     is_scaled_image,

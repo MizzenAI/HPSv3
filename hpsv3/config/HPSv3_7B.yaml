@@ -5,7 +5,7 @@ vision_lora: False
 freeze_vision_tower: False
 freeze_llm: False
 tune_merger: True                     
-model_name_or_path: "Qwen/Qwen2-VL-7B-Instruct"
+model_name_or_path: "/mizzenai/models/Qwen2-VL-7B-Instruct"
 num_lora_modules: -1
 lora_r: 512
 lora_alpha: 1024
@@ -32,7 +32,7 @@ output_dim: 2
 loss_type: "uncertainty"
 
 # Training Configuration
-disable_flash_attn2: False
+disable_flash_attn2: True
 per_device_train_batch_size: 2
 per_device_eval_batch_size: 8
 gradient_accumulation_steps: 4

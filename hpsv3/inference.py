@@ -3,10 +3,10 @@ import os
 from collections.abc import Mapping
 import torch
 import huggingface_hub
-from .dataset.utils import process_vision_info
-from .dataset.data_collator_qwen import prompt_with_special_token, prompt_without_special_token, INSTRUCTION
-from .utils.parser import ModelConfig, PEFTLoraConfig, TrainingConfig, DataConfig, parse_args_with_yaml
-from .train import create_model_and_processor
+from hpsv3.dataset.utils import process_vision_info
+from hpsv3.dataset.data_collator_qwen import prompt_with_special_token, prompt_without_special_token, INSTRUCTION
+from hpsv3.utils.parser import ModelConfig, PEFTLoraConfig, TrainingConfig, DataConfig, parse_args_with_yaml
+from hpsv3.train import create_model_and_processor
 from pathlib import Path
 
 _MODEL_CONFIG_PATH = Path(__file__).parent / f"config/"
@@ -45,6 +45,18 @@ class HPSv3RewardInferencer():
 
         if "model" in state_dict:
             state_dict = state_dict["model"]
+        
+        if any(['model.language_model' in key for key in  model.state_dict().keys()]) and not any(['language_model' in key for key in state_dict.keys()]):
+            updated_state_dict = {}
+            for key, value in state_dict.items():
+                if 'visual' in key:
+                    updated_state_dict[key.replace('visual', 'model.visual')] = value
+                elif 'model' in key:
+                    updated_state_dict[key.replace('model', 'model.language_model')] = value
+                else:
+                    updated_state_dict[key] = value
+            state_dict = updated_state_dict
+
         model.load_state_dict(state_dict, strict=True)
         model.eval()
 
@@ -148,9 +160,9 @@ class HPSv3RewardInferencer():
 
 
 if __name__ == "__main__":
-    config_path = 'config/inference/HPSv3_7B.yaml'
-    checkpoint_path = 'checkpoints/HPSv3_7B.pth'
-    device = 'cuda'
+    config_path = '/mizzenai/shuiyunhao/tasks/HPSv3_official/hpsv3/config/HPSv3_7B.yaml'
+    checkpoint_path = '/mizzenai/shuiyunhao/tasks/HPSv3_official/checkpoints/HPSv3_7B/HPSv3.safetensors'
+    device = 'cpu'
     dtype = torch.bfloat16
     inferencer = HPSv3RewardInferencer(config_path, checkpoint_path, device=device)
 
