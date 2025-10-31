@@ -46,7 +46,7 @@ def worker_process(process_id, data_chunk, config_path, checkpoint_path, batch_s
     print(f"Process {process_id} starting with device {device}, processing {len(data_chunk)} items")
     
     # Initialize model for this process
-    inferencer = HPSv3RewardInferencer(config_path, checkpoint_path, device=device, dtype=dtype)
+    inferencer = HPSv3RewardInferencer(config_path, checkpoint_path, device=device)
 
     process_correct = 0
     process_equal = 0
@@ -63,8 +63,8 @@ def worker_process(process_id, data_chunk, config_path, checkpoint_path, batch_s
             prompts = [info["prompt"] for info in batch_info]
 
             with torch.no_grad(): 
-                rewards_1 = inferencer.reward(image_paths_1, prompts)
-                rewards_2 = inferencer.reward(image_paths_2, prompts)
+                rewards_1 = inferencer.reward(image_paths=image_paths_1, prompts=prompts)
+                rewards_2 = inferencer.reward(image_paths=image_paths_2, prompts=prompts)
 
             for i in range(len(batch_info)):
                 info = batch_info[i]
@@ -90,7 +90,7 @@ def worker_process(process_id, data_chunk, config_path, checkpoint_path, batch_s
 
         elif mode == 'ranking':
             for item in batch_info:
-                rewards =  inferencer.reward(item["generations"], item["prompt"])
+                rewards =  inferencer.reward(image_paths=item["generations"], prompt=item["prompt"])
                 predict_item = {
                     "id": item["id"],
                     "prompt": item["prompt"],
