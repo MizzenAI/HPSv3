@@ -20,7 +20,7 @@ class DataConfig:
     tied_threshold: Optional[float] = None
 
 @dataclass
-class TrainingConfig(TrainingArguments):
+class TrainingConfig():
     max_grad_norm: Optional[float] = 1.0
     dataset_num_proc: Optional[int] = None
     center_rewards_coefficient: Optional[float] = None
@@ -45,6 +45,11 @@ class TrainingConfig(TrainingArguments):
     # Visualization parameters
     visualization_steps: Optional[int] = 100
     max_viz_samples: Optional[int] = 4
+
+    #Add Here, Only for inference
+    bf16 = True
+    fp16 = False
+    output_dir = 'output_models'
 
 @dataclass
 class PEFTLoraConfig:
