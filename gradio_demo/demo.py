@@ -137,7 +137,7 @@ def score_with_model(model_key, image_paths, prompts):
     config = MODEL_CONFIGS[model_key]
     
     if config["type"] == "hpsv3":
-        rewards = model.reward(image_paths, prompts)
+        rewards = model.reward(prompts, image_paths)
         return [reward[0].item() for reward in rewards]  # HPSv3 returns tensor with multiple values, take first
     elif config["type"] == "hpsv2":
         return score_hpsv2_batch(model, image_paths, prompts)
