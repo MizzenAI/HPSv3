@@ -237,7 +237,7 @@ def worker_process(process_id, process_dict, config_path, checkpoint_path, mode,
         inferencer = initialize_model_hpsv2(device, checkpoint_path)
         model_dict, tokenizer = inferencer
     elif mode == 'hpsv3':
-        inferencer = HPSv3RewardInferencer(config_path=config_path, checkpoint_path=checkpoint_path,device=device)
+        inferencer = HPSv3RewardInferencer(config_path=config_path, checkpoint_path=checkpoint_path)
     elif mode == 'pickscore':
         model, processor = initialize_pickscore(device, checkpoint_path)
     elif mode == 'aesthetic':
@@ -268,7 +268,7 @@ def worker_process(process_id, process_dict, config_path, checkpoint_path, mode,
                 elif mode == 'hpsv2':
                     rewards = score_hpsv2_batch(model_dict, tokenizer, device, image_paths, prompts)
                 elif mode == 'hpsv3':
-                    rewards = inferencer.reward(image_paths, prompts)
+                    rewards = inferencer.reward(image_paths=image_paths, prompts=prompts)
                 elif mode == 'pickscore':
                     rewards = score_pick_score_batch(prompts, image_paths, model, processor, device)
                 elif mode == 'aesthetic':
